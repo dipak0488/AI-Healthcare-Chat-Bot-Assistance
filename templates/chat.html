@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>AI Healthcare Assistant</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Professional Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+body{
+    background: linear-gradient(135deg,#0f172a,#1e293b);
+    font-family: 'Inter', 'Poppins', sans-serif;
+    height:100vh;
+    color:#e5e7eb;
+}
+
+.navbar{
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(12px);
+}
+.brand{
+    color:white;
+    font-size:24px;
+    font-weight:600;
+}
+
+.chat-card{
+    max-width:900px;
+    margin:35px auto;
+    background:rgba(255,255,255,0.08);
+    backdrop-filter: blur(20px);
+    border-radius:20px;
+    box-shadow:0 20px 45px rgba(0,0,0,0.5);
+    overflow:hidden;
+}
+
+.chat-header{
+    background:linear-gradient(90deg,#00c6ff,#0072ff);
+    color:white;
+    padding:18px;
+    font-size:22px;
+    font-weight:600;
+    text-align:center;
+}
+
+#chatbox{
+    height:430px;
+    overflow-y:auto;
+    padding:25px;
+}
+
+.user-msg{
+    text-align:right;
+    margin:12px;
+}
+.user-msg span{
+    background:linear-gradient(45deg,#00c6ff,#0072ff);
+    color:white;
+    padding:12px 16px;
+    border-radius:18px 18px 4px 18px;
+    display:inline-block;
+    font-size:15px;
+}
+
+.bot-msg{
+    text-align:left;
+    margin:12px;
+}
+.bot-msg span{
+    background:#ffffff;
+    color:#111827;
+    padding:14px 18px;
+    border-radius:18px 18px 18px 4px;
+    display:inline-block;
+    font-size:15px;
+    line-height:1.6;
+}
+
+.input-area{
+    padding:18px;
+    background:rgba(255,255,255,0.05);
+}
+
+.form-control{
+    border-radius:30px;
+    padding:12px;
+    border:none;
+}
+
+.btn-send{
+    border-radius:30px;
+    padding:12px 20px;
+    font-weight:600;
+    background:linear-gradient(90deg,#00c6ff,#0072ff);
+    border:none;
+    color:white;
+}
+
+footer{
+    text-align:center;
+    color:white;
+    margin-top:10px;
+}
+.input-container{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:#1f2937;
+    padding:10px 15px;
+    border-radius:40px;
+}
+
+.chat-input{
+    flex:1;
+    border:none;
+    outline:none;
+    background:transparent;
+    color:white;
+    font-size:15px;
+}
+
+.icon-btn{
+    border:none;
+    background:#374151;
+    color:white;
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    font-size:18px;
+    cursor:pointer;
+}
+
+.icon-btn:hover{
+    background:#4b5563;
+}
+
+.stop-btn{
+    border:none;
+    background:#ef4444;
+    color:white;
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    font-size:16px;
+    cursor:pointer;
+}
+
+.stop-btn:hover{
+    background:#dc2626;
+}
+.input-container{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:#1f2937;
+    padding:10px 15px;
+    border-radius:40px;
+}
+
+.chat-input{
+    flex:1;
+    border:none;
+    outline:none;
+    background:transparent;
+    color:white;
+    font-size:15px;
+}
+
+.icon-btn{
+    border:none;
+    background:#374151;
+    color:white;
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    font-size:18px;
+    cursor:pointer;
+}
+
+.icon-btn:hover{
+    background:#4b5563;
+}
+
+.stop-btn{
+    border:none;
+    background:#ef4444;
+    color:white;
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    font-size:16px;
+    cursor:pointer;
+}
+
+.stop-btn:hover{
+    background:#dc2626;
+}
+.listening{
+    color:#22c55e;
+    font-size:14px;
+    margin-top:5px;
+    font-style:italic;
+}
+</style>
+
+</head>
+
+<body>
+
+<nav class="navbar px-4 d-flex justify-content-between">
+    <span class="brand">🏥 Welcome to the Health AI</span>
+    <div>
+        <a href="/report/" class="btn btn-success me-2">Download Report</a>
+        <a href="/logout/" class="btn btn-light">Logout</a>
+    </div>
+</nav>
+
+<div class="chat-card">
+    <div class="chat-header">
+        🤖 HEALTH AI
+    </div>
+
+<div id="chatbox"></div>
+
+<div class="input-container">
+
+    <button id="micBtn" class="icon-btn">🎤</button>
+
+    <input id="msg" class="chat-input" placeholder="Message AI Healthcare Assistant..." />
+
+    <button id="sendBtn" class="icon-btn">➤</button>
+
+    <button id="stopBtn" class="stop-btn">■</button>
+
+</div>
+<div id="listeningIndicator" class="listening" style="display:none;">
+    🎤 Listening...
+    </div>
+</div>
+
+<footer>
+    AI Healthcare ChatBot | Final Year Project By Dipak Gaikwad
+</footer>
+<script>
+    function sendMessage() {
+        let input = document.getElementById("user-input");
+        let message = input.value;
+    
+        if (message.trim() === "") return;
+    
+        // Show typing indicator
+        document.getElementById("typing-indicator").style.display = "block";
+    
+        // Simulate delay (like AI processing)
+        setTimeout(() => {
+            document.getElementById("typing-indicator").style.display = "none";
+    
+            // Add bot reply (demo)
+            let chatBox = document.getElementById("chat-box");
+    
+            let userMsg = `<div class="user-msg">${message}</div>`;
+            let botMsg = `<div class="bot-msg">This is AI response</div>`;
+    
+            chatBox.innerHTML += userMsg + botMsg;
+    
+            input.value = "";
+        }, 1500); // 1.5 sec delay
+    }
+    </script>
+<script>
+
+    let typingInterval = null;
+    let stopGenerating = false;
+    
+    function sendMsg(){
+
+        stopGenerating = false;
+    
+        const msgInput = document.getElementById("msg");
+        const msg = msgInput.value.trim();
+    
+        if(msg === "") return;
+    
+        const chatbox = document.getElementById("chatbox");
+    
+        chatbox.innerHTML += `<div class="user-msg"><span>${msg}</span></div>`;
+    
+        msgInput.value="";
+    
+        // typing indicator
+        const typingDiv = document.createElement("div");
+        typingDiv.className = "typing";
+        typingDiv.id = "typing";
+        typingDiv.innerText = "Bot is typing...";
+        chatbox.appendChild(typingDiv);
+    
+        chatbox.scrollTop = chatbox.scrollHeight;
+    
+        fetch(`/get/?msg=${msg}`)
+        .then(res => res.json())
+        .then(data => {
+    
+            // remove typing indicator
+            document.getElementById("typing").remove();
+    
+            const botDiv = document.createElement("div");
+            botDiv.className = "bot-msg";
+    
+            const span = document.createElement("span");
+            botDiv.appendChild(span);
+    
+            chatbox.appendChild(botDiv);
+    
+            const text = data.reply;
+            let i = 0;
+    
+            typingInterval = setInterval(() => {
+    
+                if(stopGenerating){
+                    clearInterval(typingInterval);
+                    span.innerHTML += " ⛔";
+                    return;
+                }
+    
+                if(i < text.length){
+                    span.innerHTML += text.charAt(i);
+                    i++;
+                    chatbox.scrollTop = chatbox.scrollHeight;
+                }
+                else{
+                    clearInterval(typingInterval);
+    
+                    let speech = new SpeechSynthesisUtterance(data.reply);
+                    let voices = speechSynthesis.getVoices();
+
+                    // detect language
+                    if(data.lang === "mr"){
+                        speech.lang = "mr-IN";
+                    
+                        let marathiVoice = voices.find(v => v.lang.includes("mr"));
+                        if(marathiVoice){
+                            speech.voice = marathiVoice;
+                        }
+                    }
+                    else if(data.lang === "hi"){
+                        speech.lang = "hi-IN";
+                    
+                        let hindiVoice = voices.find(v => v.lang.includes("hi"));
+                        if(hindiVoice){
+                            speech.voice = hindiVoice;
+                        }
+                    }
+                    else{
+                        speech.lang = "en-US";
+                    
+                        let englishVoice = voices.find(v => v.lang.includes("en"));
+                        if(englishVoice){
+                            speech.voice = englishVoice;
+                        }
+                        speech.rate = 1;
+                        speech.pitch = 1;
+                    }
+                    
+                    window.speechSynthesis.speak(speech);
+                }
+    
+            },15);
+    
+        });
+    
+    }
+    
+    
+    // SEND BUTTON
+    document.getElementById("sendBtn").onclick = sendMsg;
+    
+    
+    // STOP BUTTON
+    document.getElementById("stopBtn").onclick = function(){
+
+    stopGenerating = true;
+
+    // stop typing animation
+    if(typingInterval){
+        clearInterval(typingInterval);
+    }
+
+    // stop bot voice
+    window.speechSynthesis.cancel();
+
+    // stop microphone listening
+    if(recognition){
+        recognition.stop();
+    }
+
+};
+    
+    
+    // ENTER KEY SEND
+    document.getElementById("msg").addEventListener("keydown",function(e){
+        if(e.key==="Enter"){
+            e.preventDefault();
+            sendMsg();
+        }
+    });
+    
+    
+    // 🎤 VOICE INPUT
+    let recognition;
+
+const micBtn = document.getElementById("micBtn");
+const listeningIndicator = document.getElementById("listeningIndicator");
+
+if ('webkitSpeechRecognition' in window){
+
+    recognition = new webkitSpeechRecognition();
+
+    recognition.lang = "en-IN";
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    micBtn.onclick = function(){
+
+        listeningIndicator.style.display = "block";
+
+        recognition.start();
+    };
+
+    recognition.onresult = function(event){
+
+        let speech = event.results[0][0].transcript;
+
+        document.getElementById("msg").value = speech;
+
+        listeningIndicator.style.display = "none";
+
+        sendMsg();
+    };
+
+    recognition.onerror = function(){
+        listeningIndicator.style.display = "none";
+    };
+
+    recognition.onend = function(){
+        listeningIndicator.style.display = "none";
+    };
+
+}
+    
+    </script>
+</body>
+</html>

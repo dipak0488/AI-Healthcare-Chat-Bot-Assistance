@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Login</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+    margin:0;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-family:'Poppins',sans-serif;
+
+    /* Background image */
+    background-image:
+    linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
+    url("{% static 'images/medical-bg.jpg' %}");
+
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+}
+
+.login-card{
+    width:360px;
+    background:rgba(255,255,255,0.95);
+    padding:40px;
+    border-radius:20px;
+    text-align:center;
+    box-shadow:0 15px 40px rgba(0,0,0,0.4);
+}
+
+.logo{
+    font-size:28px;
+    margin-bottom:10px;
+}
+
+.title{
+    font-size:22px;
+    font-weight:600;
+}
+
+.subtitle{
+    font-size:14px;
+    color:gray;
+    margin-bottom:25px;
+}
+
+.input-box{
+    width:100%;
+    padding:12px;
+    margin:10px 0;
+    border:none;
+    background:#f1f1f1;
+    border-radius:8px;
+    font-size:14px;
+}
+
+.login-btn{
+    width:100%;
+    padding:12px;
+    background:#2e7d32;
+    color:white;
+    border:none;
+    border-radius:8px;
+    font-size:16px;
+    margin-top:10px;
+    cursor:pointer;
+}
+
+.login-btn:hover{
+    background:#1b5e20;
+}
+
+.forgot{
+    margin-top:12px;
+    font-size:13px;
+    color:#666;
+}
+.logo img{
+    width:90px;
+    height:90px;
+    object-fit:contain;
+    margin-bottom:0px;
+}
+.register-btn{
+    display:block;
+    width:100%;
+    padding:12px;
+    background:#1976d2;
+    color:white;
+    text-decoration:none;
+    border-radius:8px;
+    font-size:15px;
+    margin-top:10px;
+}
+
+.register-btn:hover{
+    background:#0d47a1;
+}
+.alert{
+    background:#4caf50;
+    color:white;
+    padding:10px;
+    border-radius:8px;
+    margin-bottom:15px;
+    font-size:14px;
+}
+
+
+</style>
+</head>
+
+<body>
+
+<div class="login-card">
+    {% if messages %}
+    {% for message in messages %}
+        <div class="alert">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+    <div class="logo">
+        <img src="{% static 'bot.png' %}" class="logo">
+    </div>
+
+<div class="title"> <span style="color:#2e7d32">Login </span></div>
+
+<div class="subtitle">Helps in Emergency Situations</div>
+<script>
+    setTimeout(()=>{
+        let alert = document.querySelector(".alert");
+        if(alert){
+            alert.style.display="none";
+        }
+    },3000);
+    </script>
+
+<form method="POST">
+{% csrf_token %}
+
+<input type="text" name="username" placeholder="Username" class="input-box" required>
+
+<input type="password" name="password" placeholder="Password" class="input-box" required>
+
+<button type="submit" class="login-btn">Login</button>
+
+<div class="forgot">
+    Don’t have an account?
+    <a href="/register/">Register</a>
+</div>
+</form>
+
+<div class="forgot">
+    <a href="/forgot-password/">Forgot Password?</a>
+</div>
+
+</div>
+
+</body>
+</html>
