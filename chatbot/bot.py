@@ -1,9 +1,11 @@
 from groq import Groq
 from dotenv import load_dotenv
 import os
-load_dotenv()
+import os
+from groq import Groq
+
 client = Groq(
-API_KEY = os.getenv("API_KEY")
+    api_key=os.getenv("API_KEY")   # ✅ correct (lowercase)
 )
 
 def get_bot_response(message, language="en"):
