@@ -32,7 +32,7 @@ DEBUG = True
 
 
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['ai-healthcare-chat-bot-assistance.onrender.com']
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
@@ -172,14 +172,6 @@ EMAIL_HOST_USER = 'your_email@gmail.com'
 EMAIL_HOST_PASSWORD = 'your_app_password'
 #whitenoise
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # ✅ added
-
-    'django.contrib.sessions.middleware.SessionMiddleware',  # ✅ REQUIRED
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',  # ✅ REQUIRED
-    'django.contrib.messages.middleware.MessageMiddleware',  # ✅ REQUIRED
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    ...
 ]
